@@ -4,10 +4,9 @@ Text-To-Speech Synthesis](https://arxiv.org/pdf/1806.04558.pdf) (SV2TTS)
 
 [CorentinJ thesis](https://puu.sh/DHgBg.pdf) 
 
-.[CorentinJ github](https://github.com/CorentinJ/Real-Time-Voice-Cloning)
+[CorentinJ github](https://github.com/CorentinJ/Real-Time-Voice-Cloning)
 
-
-SV2TTS is a three-stage deep learning framework that allows to create a numerical representation of a voice from a few seconds of audio, and to use it to condition a text-to-speech model trained to generalize to new voices.
+SV2TTS는 3단계로 이루어진 딥러닝 기반의 음성합성 기술이다. 수 초의 오디오 샘플로부터 새로운 음성을 합성해낸다.
 
 **Video demonstration:**
 
