@@ -66,3 +66,10 @@ depending on whether you downloaded any datasets. If you are running an X-server
 
 ## Contribution
 Feel free to open issues or PRs for any problem you may encounter, typos that you see or aspects that are confusing.
+
+
+# Training
+## Datasets
+[AI Hub 한국어 음성](http://www.aihub.or.kr/content/552)
+[공공 인공지능 오픈 DATA](http://aiopen.etri.re.kr/service_dataset.php?category=voice)
+
