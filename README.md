@@ -30,7 +30,7 @@ You will need the following whether you plan to use the toolbox only or to retra
 
 Run `pip install -r requirements.txt` to install the necessary packages. Additionally you will need [PyTorch](https://pytorch.org/get-started/locally/).
 
-A GPU is *highly* recommended (CPU-only is currently not implemented), but you don't necessarily need a high tier GPU if you only want to use the toolbox.
+A GPU is mandatory, but you don't necessarily need a high tier GPU if you only want to use the toolbox. The VRAM is mostly what matters: 2gb is barely enough to do anything but it can work with the new `--low_mem` argument, with 4gb and 8gb you will be fine, but you might still have an OOM error if you vocode a too long input spectrogram (i.e. if there's too much text to generate)
 
 ### Pretrained models
 Download the latest [here](https://github.com/CorentinJ/Real-Time-Voice-Cloning/wiki/Pretrained-models).
