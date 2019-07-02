@@ -72,4 +72,4 @@ Feel free to open issues or PRs for any problem you may encounter, typos that yo
 ## Datasets
 - [AI Hub 한국어 음성](http://www.aihub.or.kr/content/552) 
 - [공공 인공지능 오픈 DATA](http://aiopen.etri.re.kr/service_dataset.php?category=voice)
-
+- [Zeroth](http://www.openslr.org/40/)
