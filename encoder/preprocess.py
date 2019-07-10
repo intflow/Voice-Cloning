@@ -144,8 +144,6 @@ def preprocess_etri(datasets_root: Path, out_dir: Path, skip_existing=False):
     _preprocess_speaker_dirs(speaker_dirs, dataset_name, datasets_root, out_dir, "wav",
                              skip_existing, logger)
 
-
-
 def preprocess_zeroth(datasets_root: Path, out_dir: Path, skip_existing=False):
     # Initialize the preprocessing
     dataset_name = "zeroth"

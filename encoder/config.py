@@ -26,16 +26,6 @@ libritts_datasets = {
         "other": ["LibriTTS/dev-other"]
     },
 }
-voxceleb_datasets = {
-    "voxceleb1" : {
-        "train": ["VoxCeleb1/wav"],
-        "test": ["VoxCeleb1/test_wav"]
-    },
-    "voxceleb2" : {
-        "train": ["VoxCeleb2/dev/aac"],
-        "test": ["VoxCeleb2/test_wav"]
-    }
-}
 
 other_datasets = [
     "LJSpeech-1.1",
