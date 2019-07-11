@@ -38,7 +38,7 @@ def main():
     # Preprocess the dataset
     print_args(args, parser)
     args.hparams = hparams.parse(args.hparams)
-    # preprocess_librispeech(**vars(args))
-    preprocess_AIhub(**vars(args))
+    preprocess_librispeech(**vars(args))
+    # preprocess_AIhub(**vars(args))
 if __name__ == "__main__":
     main()

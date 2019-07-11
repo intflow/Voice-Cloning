@@ -62,14 +62,14 @@ def preprocess_speaker(speaker_dir, out_dir: Path, skip_existing: bool, hparams)
         except StopIteration:
             # A few alignment files will be missing
             continue
-        
         # Iterate over each entry in the alignments file
         for wav_fname, words, end_times in alignments:
             wav_fpath = book_dir.joinpath(wav_fname + ".flac")
             assert wav_fpath.exists()
             words = words.replace("\"", "").split(",")
             end_times = list(map(float, end_times.replace("\"", "").split(",")))
-            
+
+            #....
             # Process each sub-utterance
             wavs, texts = split_on_silences(wav_fpath, words, end_times, hparams)
             for i, (wav, text) in enumerate(zip(wavs, texts)):
@@ -93,9 +93,9 @@ def split_on_silences(wav_fpath, words, end_times, hparams):
     assert words[0] == "" and words[-1] == ""
     
     # Find pauses that are too long
-    mask = (words == "") & (end_times - start_times >= hparams.silence_min_duration_split)
-    mask[0] = mask[-1] = True
-    breaks = np.where(mask)[0]
+    mask = (words == "") & (end_times - start_times >= hparams.silence_min_duration_split)   # ""이면서 duration이 묵음 최소길이보다 길 경우
+    mask[0] = mask[-1] = True    # 단어 제일 앞뒤는 True
+    breaks = np.where(mask)[0]    # breaks  침묵 구간
 
     # Profile the noise from the silences and perform noise reduction on the waveform
     silence_times = [[start_times[i], end_times[i]] for i in breaks]

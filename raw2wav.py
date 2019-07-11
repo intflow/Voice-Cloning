@@ -6,7 +6,7 @@ import wave
 import os
 from itertools import chain
 from tqdm import tqdm
-
+import re
 
 def raw2wav(input_dirs):
     folders = list(chain.from_iterable(input_dir.glob("*") for input_dir in input_dirs))
@@ -28,6 +28,32 @@ def raw2wav(input_dirs):
                     wavfile.writeframes(pcmdata)
                     wavfile.close()
 
+def kspon_alignment(input_dirs):
+    folders = list(chain.from_iterable(input_dir.glob("*") for input_dir in input_dirs))
+
+    for folder in tqdm(folders, "folders", len(folders), unit="folders"):
+        with open(os.path.join(folder, os.path.basename(folder) + "_alignment.txt"), "w", encoding='utf-8') as a:
+            texts= list()
+            symbol = ["o/", "b/", "l/", "n/", "u/", "+", "*", "(", "/"]
+            punctuation = ["  ", ",", ".", "?", "!"]
+            for file in folder.glob("*"):
+                if str(file).endswith(".txt"):
+                    with open(file, "r") as f:
+                        texts.append(" ".join(f.read().splitlines()) + "\n")
+            for i, text in enumerate(texts):
+                text = re.sub('\)\/\([가-힣\s\w]*\)', "", text)
+                for sym in symbol:
+                    text = text.replace(sym, "")
+                for pun in punctuation:
+                    text = text.replace(pun, " ")
+                while text[0] == " ":
+                    text = text[1:]
+                texts[i] = text
+            for text in texts:
+                a.write(text)
+
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -45,3 +71,4 @@ if __name__ == "__main__":
                   dataset_root.joinpath("KsponSpeech_04"),
                   dataset_root.joinpath("KsponSpeech_05")]
     raw2wav(input_dirs)
+    kspon_alignment(input_dirs)
