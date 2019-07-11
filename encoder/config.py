@@ -31,5 +31,4 @@ other_datasets = [
     "LJSpeech-1.1",
     "VCTK-Corpus/wav48",
 ]
-
 anglophone_nationalites = ["australia", "canada", "ireland", "uk", "usa"]
