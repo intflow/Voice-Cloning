@@ -365,7 +365,7 @@ def train(log_dir, args, hparams):
                                                                                       step, loss),
                                           target_spectrogram=target,
                                           max_len=target_length)
-                    log("Input at step {}: {}".format(step, sequence_to_text(input_seq)))
+                    log("Input at step {}: {}".format(step, sequence_to_text(input_seq, hparams, True, True)))
                 
                 if step % args.embedding_interval == 0 or step == args.tacotron_train_steps or step == 1:
                     # Get current checkpoint state
