@@ -1,5 +1,5 @@
 from synthesizer.preprocess import preprocess_librispeech
-from synthesizer.Kor_preprocess import preprocess_AIhub
+from synthesizer.Kor_preprocess import preprocess_KSponSpeech
 from synthesizer.hparams import hparams
 from utils.argutils import print_args
 from pathlib import Path
@@ -38,7 +38,7 @@ def main():
     # Preprocess the dataset
     print_args(args, parser)
     args.hparams = hparams.parse(args.hparams)
-    preprocess_librispeech(**vars(args))
-    # preprocess_AIhub(**vars(args))
+    # preprocess_librispeech(**vars(args))
+    preprocess_KSponSpeech(**vars(args))
 if __name__ == "__main__":
     main()

@@ -33,6 +33,7 @@ def preprocess_librispeech(datasets_root: Path, out_dir: Path, n_processes: int,
                    hparams=hparams)
     job = Pool(n_processes).imap(func, speaker_dirs)
     for speaker_metadata in tqdm(job, "LibriSpeech", len(speaker_dirs), unit="speakers"):
+        print(speaker_metadata)
         for metadatum in speaker_metadata:
             metadata_file.write("|".join(str(x) for x in metadatum) + "\n")
     metadata_file.close()
@@ -72,6 +73,7 @@ def preprocess_speaker(speaker_dir, out_dir: Path, skip_existing: bool, hparams)
             #....
             # Process each sub-utterance
             wavs, texts = split_on_silences(wav_fpath, words, end_times, hparams)
+
             for i, (wav, text) in enumerate(zip(wavs, texts)):
                 sub_basename = "%s_%02d" % (wav_fname, i)
                 metadata.append(process_utterance(wav, text, out_dir, sub_basename, 
@@ -213,7 +215,7 @@ def create_embeddings(synthesizer_root: Path, encoder_model_fpath: Path, n_proce
     embed_dir.mkdir(exist_ok=True)
     
     # Gather the input wave filepath and the target output embed filepath
-    with metadata_fpath.open("r") as metadata_file:
+    with metadata_fpath.open("r", encoding='utf-8-sig') as metadata_file:
         metadata = [line.split("|") for line in metadata_file]
         fpaths = [(wav_dir.joinpath(m[0]), embed_dir.joinpath(m[2])) for m in metadata]
         

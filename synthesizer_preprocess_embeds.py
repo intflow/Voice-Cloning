@@ -13,7 +13,7 @@ def main():
         "Path to the synthesizer training data that contains the audios and the train.txt file. "
         "If you let everything as default, it should be <datasets_root>/SV2TTS/synthesizer/.")
     parser.add_argument("-e", "--encoder_model_fpath", type=Path, 
-                        default="encoder/saved_models/pretrained.pt", help=\
+                        default="encoder/saved_models/my_run.pt", help=\
         "Path your trained encoder model.")
     parser.add_argument("-n", "--n_processes", type=int, default=4, help= \
         "Number of parallel processes. An encoder is created for each, so you may need to lower "

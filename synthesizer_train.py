@@ -30,13 +30,13 @@ def main():
 							 "in Tacotron synthesis mode")
     parser.add_argument("--restore", type=bool, default=True,
                         help="Set this to False to do a fresh training")
-    parser.add_argument("--summary_interval", type=int, default=2500,
+    parser.add_argument("--summary_interval", type=int, default=1000, #1000
                         help="Steps between running summary ops")
-    parser.add_argument("--embedding_interval", type=int, default=10000,
+    parser.add_argument("--embedding_interval", type=int, default=5000,
                         help="Steps between updating embeddings projection visualization")
-    parser.add_argument("--checkpoint_interval", type=int, default=2000, # Was 5000
+    parser.add_argument("--checkpoint_interval", type=int, default=5, # Was 5000
                         help="Steps between writing checkpoints")
-    parser.add_argument("--eval_interval", type=int, default=100000, # Was 10000
+    parser.add_argument("--eval_interval", type=int, default=10000, # Was 10000
                         help="Steps between eval on test data")
     parser.add_argument("--tacotron_train_steps", type=int, default=2000000, # Was 100000
                         help="total number of tacotron training steps")

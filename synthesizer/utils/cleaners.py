@@ -17,6 +17,12 @@ from .numbers import normalize_numbers
 # Regular expression matching whitespace:
 _whitespace_re = re.compile(r"\s+")
 
+def korean_cleaners(text):
+    '''Pipeline for Korean text, including number and abbreviation expansion.'''
+    text = ko_tokenize(text) # '존경하는' --> ['ᄌ', 'ᅩ', 'ᆫ', 'ᄀ', 'ᅧ', 'ᆼ', 'ᄒ', 'ᅡ', 'ᄂ', 'ᅳ', 'ᆫ', '~']
+    return text
+
+
 # List of (regular expression, replacement) pairs for abbreviations:
 _abbreviations = [(re.compile("\\b%s\\." % x[0], re.IGNORECASE), x[1]) for x in [
   ("mrs", "misess"),

@@ -8,12 +8,13 @@ from utils import logmmse
 from tqdm import tqdm
 import numpy as np
 import librosa
+import os
 
 
-def preprocess_AIhub(datasets_root: Path, out_dir: Path, n_processes: int,
+def preprocess_KSponSpeech(datasets_root: Path, out_dir: Path, n_processes: int,
                            skip_existing: bool, hparams):
     # Gather the input directories
-    dataset_root = datasets_root.joinpath("AI_Hub")
+    dataset_root = datasets_root.joinpath("KSponSpeech")
     input_dirs = [dataset_root.joinpath("KsponSpeech_01"),
                   dataset_root.joinpath("KsponSpeech_02"),
                   dataset_root.joinpath("KsponSpeech_03"),
@@ -33,11 +34,10 @@ def preprocess_AIhub(datasets_root: Path, out_dir: Path, n_processes: int,
 
     # Preprocess the dataset
     speaker_dirs = list(chain.from_iterable(input_dir.glob("*") for input_dir in input_dirs))   # 폴더안의 모든 폴더(Speaker)
-
     func = partial(preprocess_speaker, out_dir=out_dir, skip_existing=skip_existing,
                    hparams=hparams)
     job = Pool(n_processes).imap(func, speaker_dirs)
-    for speaker_metadata in tqdm(job, "LibriSpeech", len(speaker_dirs), unit="speakers"):
+    for speaker_metadata in tqdm(job, "KSponSpeech", len(speaker_dirs), unit="speakers"):
         for metadatum in speaker_metadata:
             metadata_file.write("|".join(str(x) for x in metadatum) + "\n")
     metadata_file.close()
@@ -58,36 +58,43 @@ def preprocess_AIhub(datasets_root: Path, out_dir: Path, n_processes: int,
 
 def preprocess_speaker(speaker_dir, out_dir: Path, skip_existing: bool, hparams):
     metadata = []
-    for book_dir in speaker_dir.glob("*"):
-        # Gather the utterance audios and texts
-        try:
-            alignments_fpath = next(book_dir.glob("*.alignment.txt"))
-            with alignments_fpath.open("r") as alignments_file:
-                alignments = [line.rstrip().split(" ") for line in alignments_file]
-        except StopIteration:
-            # A few alignment files will be missing
-            continue
+    # Gather the utterance audios and texts
+    # try:
+    files = os.listdir(speaker_dir)
 
-        # Iterate over each entry in the alignments file
-        for wav_fname, words, end_times in alignments:
-            wav_fpath = book_dir.joinpath(wav_fname + ".wav")
-            assert wav_fpath.exists()
-            # words = words.replace("\"", "").split(",")
-            # end_times = list(map(float, end_times.replace("\"", "").split(",")))
-            #
-            # # Process each sub-utterance
-            wavs = normalization(wav_fpath, words, end_times, hparams)
-            for i, (wav, text) in enumerate(zip(wavs, words)):
-                sub_basename = "%s_%02d" % (wav_fname, i)
-                metadata.append(process_utterance(wav, text, out_dir, sub_basename,
-                                                  skip_existing, hparams))
+    for file in files:
+        if file.endswith("alignment.txt"):
+            with open(os.path.join(speaker_dir, file), "r", encoding='utf-8') as alignments_file:
+                alignments = [line.rstrip().split(" ") for line in alignments_file.readlines()]
+    # # except StopIteration:
+    # #     # A few alignment files will be missing
+    # #     continue
+
+    # Iterate over each entry in the alignments file
+    for wav_fname, words in alignments:
+        wav_fpath = speaker_dir.joinpath(wav_fname + ".wav")
+        assert wav_fpath.exists()
+        # words = words.replace("\"", "").split(",")
+        # end_times = list(map(float, end_times.replace("\"", "").split(",")))
+        #
+        # # Process each sub-utterance
+        wavs = normalization(wav_fpath, hparams)
+
+        if wavs is not None:
+            sub_basename = "%s" % (wav_fname)
+            metadata.append(process_utterance(wavs, words, out_dir, sub_basename,
+                                              skip_existing, hparams))
 
     return [m for m in metadata if m is not None]
 
 def normalization(wav_fpath, hparams):
-    wav, _ = librosa.load(wav_fpath, hparams.sample_rate)
-    if hparams.rescale:
-        wav = wav / np.abs(wav).max() * hparams.rescaling_max
+    try:
+        wav, _ = librosa.load(wav_fpath, hparams.sample_rate)
+        if hparams.rescale:
+            wav = wav / np.abs(wav).max() * hparams.rescaling_max
+    except EOFError:
+        print(wav_fpath)
+        return None
     return wav
 
 def process_utterance(wav: np.ndarray, text: str, out_dir: Path, basename: str,
