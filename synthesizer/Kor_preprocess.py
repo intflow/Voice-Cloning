@@ -15,11 +15,11 @@ def preprocess_KSponSpeech(datasets_root: Path, out_dir: Path, n_processes: int,
                            skip_existing: bool, hparams):
     # Gather the input directories
     dataset_root = datasets_root.joinpath("KSponSpeech")
-    input_dirs = [dataset_root.joinpath("KsponSpeech_01"),
-                  dataset_root.joinpath("KsponSpeech_02"),
-                  dataset_root.joinpath("KsponSpeech_03"),
-                  dataset_root.joinpath("KsponSpeech_04"),
-                  dataset_root.joinpath("KsponSpeech_05")]
+    input_dirs = [dataset_root.joinpath("KsponSpeech_01")]
+    # dataset_root.joinpath("KsponSpeech_02"),
+    # dataset_root.joinpath("KsponSpeech_03"),
+    # dataset_root.joinpath("KsponSpeech_04"),
+    # dataset_root.joinpath("KsponSpeech_05")]
 
     print("\n    ".join(map(str, ["Using data from:"] + input_dirs)))
     assert all(input_dir.exists() for input_dir in input_dirs)
@@ -33,7 +33,7 @@ def preprocess_KSponSpeech(datasets_root: Path, out_dir: Path, n_processes: int,
     metadata_file = metadata_fpath.open("a" if skip_existing else "w", encoding="utf-8")
 
     # Preprocess the dataset
-    speaker_dirs = list(chain.from_iterable(input_dir.glob("*") for input_dir in input_dirs))   # 폴더안의 모든 폴더(Speaker)
+    speaker_dirs = list(chain.from_iterable(input_dir.glob("*") for input_dir in input_dirs))  # 폴더안의 모든 폴더(Speaker)
     func = partial(preprocess_speaker, out_dir=out_dir, skip_existing=skip_existing,
                    hparams=hparams)
     job = Pool(n_processes).imap(func, speaker_dirs)
@@ -58,6 +58,7 @@ def preprocess_KSponSpeech(datasets_root: Path, out_dir: Path, n_processes: int,
 
 def preprocess_speaker(speaker_dir, out_dir: Path, skip_existing: bool, hparams):
     metadata = []
+    check_list = [",01", ",02", ",03", ",04", ",05", ",06", ",07", ",08", ",09"]
     # Gather the utterance audios and texts
     # try:
     files = os.listdir(speaker_dir)
@@ -72,6 +73,12 @@ def preprocess_speaker(speaker_dir, out_dir: Path, skip_existing: bool, hparams)
 
     # Iterate over each entry in the alignments file
     for wav_fname, words in alignments:
+
+        for check in check_list:
+            if check in words:
+                print(words)
+                words = "pass"
+
         wav_fpath = speaker_dir.joinpath(wav_fname + ".wav")
         assert wav_fpath.exists()
         # words = words.replace("\"", "").split(",")
@@ -80,12 +87,13 @@ def preprocess_speaker(speaker_dir, out_dir: Path, skip_existing: bool, hparams)
         # # Process each sub-utterance
         wavs = normalization(wav_fpath, hparams)
 
-        if wavs is not None:
+        if wavs is not None and words is not "pass":
             sub_basename = "%s" % (wav_fname)
             metadata.append(process_utterance(wavs, words, out_dir, sub_basename,
                                               skip_existing, hparams))
 
     return [m for m in metadata if m is not None]
+
 
 def normalization(wav_fpath, hparams):
     try:
@@ -96,6 +104,7 @@ def normalization(wav_fpath, hparams):
         print(wav_fpath)
         return None
     return wav
+
 
 def process_utterance(wav: np.ndarray, text: str, out_dir: Path, basename: str,
                       skip_existing: bool, hparams):

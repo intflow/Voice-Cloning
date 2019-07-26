@@ -35,3 +35,12 @@
 # print(wav)
 # wav = wav / np.abs(wav).max() * 0.9
 # print(len(wav))
+
+
+path = r'C:\Users\BH\Desktop\d\SV2TTS\synthesizer/'
+file = "train.txt"
+
+with open(path+file , "r", encoding='utf-8') as f:
+    t = f.readlines()
+
+print(len(t))
