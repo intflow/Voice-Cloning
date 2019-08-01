@@ -15,11 +15,11 @@ def preprocess_KSponSpeech(datasets_root: Path, out_dir: Path, n_processes: int,
                            skip_existing: bool, hparams):
     # Gather the input directories
     dataset_root = datasets_root.joinpath("KSponSpeech")
-    input_dirs = [dataset_root.joinpath("KsponSpeech_01")]
-    # dataset_root.joinpath("KsponSpeech_02"),
-    # dataset_root.joinpath("KsponSpeech_03"),
-    # dataset_root.joinpath("KsponSpeech_04"),
-    # dataset_root.joinpath("KsponSpeech_05")]
+    input_dirs = [dataset_root.joinpath("KsponSpeech_01"),
+    dataset_root.joinpath("KsponSpeech_02"),
+    dataset_root.joinpath("KsponSpeech_03"),
+    dataset_root.joinpath("KsponSpeech_04"),
+    dataset_root.joinpath("KsponSpeech_05")]
 
     print("\n    ".join(map(str, ["Using data from:"] + input_dirs)))
     assert all(input_dir.exists() for input_dir in input_dirs)

@@ -4,7 +4,7 @@ from pathlib import Path
 import argparse
 
 
-def main():
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Trains the vocoder from the synthesizer audios and the GTA synthesized mels, "
                     "or ground truth mels.",
@@ -53,7 +53,3 @@ def main():
     # Run the training
     print_args(args, parser)
     train(**vars(args))
-    
-    
-if __name__ == "__main__":
-    main()

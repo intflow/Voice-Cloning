@@ -6,7 +6,7 @@ from pathlib import Path
 import argparse
 
 
-def main():
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Preprocesses audio files from datasets, encodes them as mel spectrograms "
                     "and writes them to  the disk. Audio files are also saved, to be used by the "
@@ -40,5 +40,4 @@ def main():
     args.hparams = hparams.parse(args.hparams)
     # preprocess_librispeech(**vars(args))
     preprocess_KSponSpeech(**vars(args))
-if __name__ == "__main__":
-    main()
+
